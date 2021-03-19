@@ -12,7 +12,7 @@ using Serilog;
 using Serilog.Exceptions;
 using Telegram.Bot;
 
-namespace hc
+namespace HC
 {
     public class Program
     {
