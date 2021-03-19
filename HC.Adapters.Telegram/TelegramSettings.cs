@@ -1,4 +1,4 @@
-﻿namespace hc.Notify
+﻿namespace HC.Adapters.Telegram
 {
     public class TelegramSettings
     {

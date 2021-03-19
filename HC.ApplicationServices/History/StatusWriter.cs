@@ -6,7 +6,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace hc.History
+namespace HC.ApplicationServices.History
 {
     public class StatusWriter : IDisposable
     {

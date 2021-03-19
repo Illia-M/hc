@@ -1,8 +1,8 @@
 ﻿using System;
-using hc.Http;
-using hc.Notify;
+using HC.Adapters.Telegram;
+using HC.Http;
 
-namespace hc.Settings
+namespace HC.Settings
 {
     public class AppSettings
     {

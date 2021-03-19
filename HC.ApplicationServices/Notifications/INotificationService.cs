@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace hc.Notify
+namespace HC.ApplicationServices.Notifications
 {
     public interface INotificationService
     {

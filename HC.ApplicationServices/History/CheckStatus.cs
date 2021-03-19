@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 
-namespace hc.History
+namespace HC.ApplicationServices.History
 {
     public class CheckStatus
     {
-        private CheckStatus(){}
+        private CheckStatus() { }
 
         public CheckStatus(string resource, bool isCheckPass, long elapsedMilliseconds, DateTimeOffset atTime)
         {
@@ -16,15 +16,15 @@ namespace hc.History
         }
 
         [JsonPropertyName("at_time")]
-        public DateTimeOffset AtTime { get; set; }
+        public DateTimeOffset AtTime { get; private set; }
 
         [JsonPropertyName("resource")]
-        public string Resource { get; set; } = null!;
+        public string Resource { get; private set; } = null!;
 
         [JsonPropertyName("is_check_pass")]
-        public bool IsCheckPass { get; set; }
+        public bool IsCheckPass { get; private set; }
 
         [JsonPropertyName("elapsed_milliseconds")]
-        public long ElapsedMilliseconds { get; set; }
+        public long ElapsedMilliseconds { get; private set; }
     }
 }

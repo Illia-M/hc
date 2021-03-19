@@ -1,12 +1,16 @@
 using System.Threading.Tasks;
-using hc.History;
-using hc.Http;
-using hc.Notify;
-using hc.Settings;
+using HC.Adapters.Telegram;
+using HC.ApplicationServices.History;
+using HC.ApplicationServices.Notifications;
+using HC.Http;
+using HC.Settings;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Serilog;
 using Serilog.Exceptions;
+using Telegram.Bot;
 
 namespace hc
 {
@@ -31,8 +35,24 @@ namespace hc
                 {
                     services.AddOptions();
                     services.Configure<AppSettings>(hostContext.Configuration);
-                    services.AddSingleton<INotificationService, TelegramService>();
+                    services.Configure<TelegramSettings>(hostContext.Configuration.GetSection(nameof(AppSettings.Telegram)));
+                    services.AddSingleton<TelegramBotClient>(provider =>
+                    {
+                        var options = provider.GetRequiredService<IOptions<TelegramSettings>>();
+
+                        if (!string.IsNullOrEmpty(options.Value?.Token))
+                        {
+                            return new TelegramBotClient(options.Value.Token);
+
+                        }
+
+                        var logger = provider.GetRequiredService<Microsoft.Extensions.Logging.ILogger>();
+                        logger.LogInformation("Telegram not configured");
+                        return null;
+                    });
+                    services.AddSingleton<INotificationService, TelegramNotificationService>();
                     services.AddSingleton<StatusWriter>();
+                    services.AddHostedService<TelegramHostedService>();
                     services.AddHostedService<HttpCheckWorker>();
                 });
     }

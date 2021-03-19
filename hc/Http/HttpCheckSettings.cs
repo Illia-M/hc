@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace hc.Http
+namespace HC.Http
 {
     public class HttpCheckSettings
     {

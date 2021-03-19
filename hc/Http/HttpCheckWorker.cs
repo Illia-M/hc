@@ -4,14 +4,14 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using hc.History;
-using hc.Notify;
-using hc.Settings;
+using HC.ApplicationServices.History;
+using HC.ApplicationServices.Notifications;
+using HC.Settings;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace hc.Http
+namespace HC.Http
 {
     public class HttpCheckWorker : BackgroundService
     {
@@ -34,12 +34,21 @@ namespace hc.Http
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                var timeoutTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(90));
-                using var cts = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken, timeoutTokenSource.Token);
-                var tasks = _options.Value.HttpChecks.Select(settings => CheckSite(settings, cts.Token));
+                try
+                {
+                    var timeoutTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(90));
+                    using var cts =
+                        CancellationTokenSource.CreateLinkedTokenSource(stoppingToken, timeoutTokenSource.Token);
 
-                await Task.WhenAll(tasks);
-                await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
+                    var tasks = _options.Value.HttpChecks.Select(settings => CheckSite(settings, cts.Token));
+
+                    await Task.WhenAll(tasks);
+                    await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
+                }
+                catch (TaskCanceledException ex)
+                {
+                    _logger.LogWarning(ex, "Cancellation requested");
+                }
             }
         }
 
