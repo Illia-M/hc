@@ -1,12 +1,11 @@
-﻿using System;
-using HC.Adapters.Telegram;
-using HC.Http;
+﻿using HC.Adapters.Telegram;
+using HC.Domain;
 
 namespace HC.Settings
 {
     public class AppSettings
     {
-        public HttpCheckSettings[] HttpChecks { get; set; } = Array.Empty<HttpCheckSettings>();
+        public ChecksSettings Checks { get; set; }
 
         public TelegramSettings? Telegram { get; set; }
     }

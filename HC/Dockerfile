@@ -8,6 +8,8 @@ WORKDIR /src
 COPY ["hc/HC.csproj", "hc/"]
 COPY ["HC.Adapters.Telegram/HC.Adapters.Telegram.csproj", "HC.Adapters.Telegram/"]
 COPY ["HC.ApplicationServices/HC.ApplicationServices.csproj", "HC.ApplicationServices/"]
+COPY ["HC.Domain/HC.Domain.csproj", "HC.Domain/"]
+COPY ["HC.DAL.LiteDB/HC.DAL.LiteDB.csproj", "HC.DAL.LiteDB/"]
 RUN dotnet restore "hc/HC.csproj"
 COPY . .
 WORKDIR "/src/hc"
