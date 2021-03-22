@@ -5,7 +5,7 @@ WORKDIR /app
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build
 WORKDIR /src
-COPY ["HC/HC.csproj", "hc/"]
+COPY ["HC/HC.csproj", "HC/"]
 COPY ["HC.Adapters.Telegram/HC.Adapters.Telegram.csproj", "HC.Adapters.Telegram/"]
 COPY ["HC.ApplicationServices/HC.ApplicationServices.csproj", "HC.ApplicationServices/"]
 COPY ["HC.Domain/HC.Domain.csproj", "HC.Domain/"]
