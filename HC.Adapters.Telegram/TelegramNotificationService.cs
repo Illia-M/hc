@@ -25,7 +25,7 @@ namespace HC.Adapters.Telegram
             {
                 if (_telegramBotClient is { })
                 {
-                    await _telegramBotClient.SendTextMessageAsync(channelId, text, ParseMode.Default, cancellationToken: cancellationToken);
+                    await _telegramBotClient.SendTextMessageAsync(channelId, text, ParseMode.Default, disableWebPagePreview: true, cancellationToken: cancellationToken);
                 }
             }
             catch (Exception ex)

@@ -3,10 +3,19 @@
 [*.cs]
 
 
-#Core editorconfig formatting - indentation
+# C# files
+[*.cs]
 
-#use soft tabs (spaces) for indentation
+#### Core EditorConfig Options ####
+
+# Indentation and spacing
+indent_size = 4
 indent_style = space
+tab_width = 4
+
+# New line preferences
+end_of_line = crlf
+insert_final_newline = false
 
 #Formatting - indentation options
 
@@ -60,7 +69,7 @@ csharp_preserve_single_line_blocks = false
 #Style - Code block preferences
 
 #prefer curly braces even for one line of code
-csharp_prefer_braces = true:suggestion
+csharp_prefer_braces = true:error
 
 #Style - expression bodied member options
 
@@ -72,12 +81,12 @@ csharp_style_expression_bodied_methods = false:error
 #Style - expression level options
 
 #prefer the language keyword for member access expressions, instead of the type name, for types that have a keyword to represent them
-dotnet_style_predefined_type_for_member_access = true:suggestion
+dotnet_style_predefined_type_for_member_access = true:error
 
 #Style - Expression-level  preferences
 
 #prefer objects to be initialized using object initializers when possible
-dotnet_style_object_initializer = true:suggestion
+dotnet_style_object_initializer = true:warning
 
 #Style - implicit and explicit types
 
@@ -91,28 +100,34 @@ csharp_style_var_when_type_is_apparent = true:suggestion
 #Style - language keyword and framework type options
 
 #prefer the language keyword for local variables, method parameters, and class members, instead of the type name, for types that have a keyword to represent them
-dotnet_style_predefined_type_for_locals_parameters_members = true:suggestion
+dotnet_style_predefined_type_for_locals_parameters_members = true:error
 
 #Style - modifier options
 
 #prefer accessibility modifiers to be declared except for public interface members. This will currently not differ from always and will act as future proofing for if C# adds default interface methods.
-dotnet_style_require_accessibility_modifiers = for_non_interface_members:suggestion
+dotnet_style_require_accessibility_modifiers = for_non_interface_members:error
 
 #Style - Modifier preferences
 
 #when this rule is set to a list of modifiers, prefer the specified ordering.
-csharp_preferred_modifier_order = public,private,protected,readonly,async,override,static:suggestion
+csharp_preferred_modifier_order = public,private,protected,static,readonly,override,async:error
 
 #Style - Pattern matching
 
-#prefer pattern matching instead of is expression with type casts
+# Pattern matching preferences
 csharp_style_pattern_matching_over_as_with_null_check = true:suggestion
+csharp_style_pattern_matching_over_is_with_cast_check = true:suggestion
 
 #Style - qualification options
 
 #prefer fields not to be prefaced with this. or Me. in Visual Basic
-dotnet_style_qualification_for_field = false:suggestion
+dotnet_style_qualification_for_field = false:error
 #prefer methods not to be prefaced with this. or Me. in Visual Basic
-dotnet_style_qualification_for_method = false:suggestion
+dotnet_style_qualification_for_method = false:error
 #prefer properties not to be prefaced with this. or Me. in Visual Basic
-dotnet_style_qualification_for_property = false:suggestion
+dotnet_style_qualification_for_property = false:error
+dotnet_style_qualification_for_event = false:error
+
+dotnet_style_prefer_auto_properties = true:suggestion
+csharp_style_expression_bodied_properties = true:error
+csharp_prefer_simple_using_statement = true:error

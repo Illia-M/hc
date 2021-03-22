@@ -50,7 +50,7 @@ namespace HC
                             return new TelegramBotClient(options.Value.Token);
                         }
 
-                        var logger = provider.GetRequiredService<Microsoft.Extensions.Logging.ILogger>();
+                        var logger = provider.GetRequiredService<ILogger<Program>>();
                         logger.LogInformation("Telegram not configured");
                         return null!;
                     });

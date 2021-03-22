@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using HC.ApplicationServices.Checks.HttpCheck;
-using HC.Domain;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Telegram.Bot;
@@ -14,22 +12,21 @@ using Telegram.Bot.Args;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace HC.Adapters.Telegram
 {
     public class TelegramHostedService : IHostedService
     {
-        private readonly ConcurrentDictionary<long, bool> _chatsAwaitingCheckAdDictionary = new ConcurrentDictionary<long, bool>();
+        private readonly ConcurrentDictionary<string, ChatContext> _chatsDictionary = new ConcurrentDictionary<string, ChatContext>();
         private readonly TelegramBotClient? _telegramBotClient;
-        private readonly IHttpCheckSettingsRepository _httpCheckSettingsRepository;
+        private readonly IServiceProvider _serviceProvider;
         private readonly IHostApplicationLifetime _hostApplicationLifetime;
         private readonly ILogger<TelegramHostedService> _logger;
 
-        public TelegramHostedService(TelegramBotClient telegramBotClient, IHttpCheckSettingsRepository httpCheckSettingsRepository, IHostApplicationLifetime hostApplicationLifetime, ILogger<TelegramHostedService> logger)
+        public TelegramHostedService(TelegramBotClient telegramBotClient, IServiceProvider serviceProvider, IHostApplicationLifetime hostApplicationLifetime, ILogger<TelegramHostedService> logger)
         {
             _telegramBotClient = telegramBotClient;
-            _httpCheckSettingsRepository = httpCheckSettingsRepository;
+            _serviceProvider = serviceProvider;
             _hostApplicationLifetime = hostApplicationLifetime;
             _logger = logger;
         }
@@ -55,9 +52,12 @@ namespace HC.Adapters.Telegram
         {
             try
             {
-                await _httpCheckSettingsRepository.Remove(Guid.Parse(e.CallbackQuery.Data), CancellationToken.None);
+                var chat = Chat.Create(e.CallbackQuery.From.Id);
+                var chatContext = _chatsDictionary.GetOrAdd(chat.Id,
+                    l => new ChatContext(chat, _telegramBotClient!,
+                        _serviceProvider.GetRequiredService<IServiceProvider>()));
 
-                await _telegramBotClient?.AnswerCallbackQueryAsync(e.CallbackQuery.Id, "Removed!", cancellationToken: CancellationToken.None);
+                await chatContext.Handle(e.CallbackQuery);
             }
             catch (Exception ex)
             {
@@ -100,103 +100,12 @@ namespace HC.Adapters.Telegram
 
         private async Task HandleTextMessage(Message message)
         {
-            switch (message.Text)
-            {
-                case "/start":
-                case "/restart":
-                {
-                    var text =
-                        "Hello!\n\nI can help you setup health checks for your resources with notification in Telegram!\n\nSend me /help command for more details!";
-                    await _telegramBotClient!.SendTextMessageAsync(message.Chat.Id, text, ParseMode.Default);
-                }
-                break;
-                case "/help":
-                {
-                    await SendHelp(message);
-                }
-                break;
-                case "/list":
-                {
-                    var userChecks = await _httpCheckSettingsRepository.GetByTelegramId(message.Chat.Id.ToString(), CancellationToken.None);
+            var chat = Chat.Create(message.Chat.Id);
+            var chatContext = _chatsDictionary.GetOrAdd(chat.Id,
+                l => new ChatContext(chat, _telegramBotClient!,
+                    _serviceProvider.GetRequiredService<IServiceProvider>()));
 
-                    if (!userChecks.Any())
-                    {
-                        await _telegramBotClient!.SendTextMessageAsync(message.Chat.Id, "Your checks list empty now, try add checks with /addHealthCheck command", ParseMode.Default);
-                    }
-                    else
-                    {
-                        foreach (var userCheck in userChecks)
-                        {
-                            await _telegramBotClient!.SendTextMessageAsync(message.Chat.Id, $"{userCheck.Uri}", disableWebPagePreview: true, replyMarkup: new InlineKeyboardMarkup(new[] {
-                                InlineKeyboardButton.WithCallbackData("Remove", userCheck.Id.ToString("N")),
-                            }));
-                        }
-                    }
-                }
-                break;
-                case "/addHealthCheck":
-                {
-                    _chatsAwaitingCheckAdDictionary.AddOrUpdate(message.Chat.Id, true, (s, b) => true);
-                    await _telegramBotClient!.SendTextMessageAsync(message.Chat.Id, "Send me some resource, for now i can handle HTTP check only", ParseMode.Default);
-                }
-                break;
-                case "/removeHealthCheck":
-                {
-                    await _telegramBotClient!.SendTextMessageAsync(message.Chat.Id, "Not implemented yet :|", ParseMode.Default);
-                }
-                break;
-                default:
-                {
-                    if (_chatsAwaitingCheckAdDictionary.TryRemove(message.Chat.Id, out var isAwaitingAdd) &&
-                        isAwaitingAdd)
-                    {
-                        await HandleAddCheck(message);
-                        return;
-                    }
-
-                    await _telegramBotClient!.SendTextMessageAsync(message.Chat.Id, "Can not understand what you want :(", ParseMode.Default);
-                    await SendHelp(message);
-                }
-                break;
-            }
-        }
-
-        private async Task HandleAddCheck(Message message)
-        {
-            if (!Uri.TryCreate(message.Text, UriKind.Absolute, out var url))
-            {
-                await _telegramBotClient!.SendTextMessageAsync(message.Chat.Id, "Can not handle this type of resource :(", ParseMode.Default);
-                return;
-            }
-
-            switch (url.Scheme)
-            {
-                case "http":
-                case "https":
-
-                    var isAdded = await _httpCheckSettingsRepository.Add(new HttpCheck(Guid.NewGuid(), url.ToString(), message.Chat.Id.ToString(),
-                        TimeSpan.FromSeconds(30), new ushort[] { 200 }, new Dictionary<string, string>()), CancellationToken.None);
-
-                    await _telegramBotClient!.SendTextMessageAsync(message.Chat.Id,
-                        "Your check " + (isAdded ? "added!" : "not added :("), ParseMode.Default);
-                    break;
-                default:
-                    await _telegramBotClient!.SendTextMessageAsync(message.Chat.Id,
-                        "Can not handle this type of resource :(", ParseMode.Default);
-                    break;
-            }
-        }
-
-        private async Task SendHelp(Message message)
-        {
-            var text = @"I understand next commands:
-
-    /help - display this help :)
-    /addHealthCheck - for setup health check to any supported resource
-    /removeHealthCheck - for remove one of your health check :'(
-    /list - for list of all your health checks";
-
-            await _telegramBotClient!.SendTextMessageAsync(message.Chat.Id, text, ParseMode.Default);
+            await chatContext.Handle(message);
         }
     }
 }
