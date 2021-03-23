@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Telegram.Bot;
 
-namespace HC.Adapters.Telegram
+namespace HC.Adapters.Telegram.ChatBot
 {
     public class HelpChatState : BaseChatState
     {
@@ -20,7 +20,7 @@ namespace HC.Adapters.Telegram
     /removeHealthCheck - for remove one of your health check :'(
     /list - for list of all your health checks";
 
-            return base.SendMessage(text);
+            return SendMessage(text);
         }
     }
 }

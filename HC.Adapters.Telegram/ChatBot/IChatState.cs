@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Telegram.Bot.Types;
 
-namespace HC.Adapters.Telegram
+namespace HC.Adapters.Telegram.ChatBot
 {
     public interface IChatState
     {

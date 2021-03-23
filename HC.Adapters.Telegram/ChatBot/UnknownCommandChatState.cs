@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Telegram.Bot;
 
-namespace HC.Adapters.Telegram
+namespace HC.Adapters.Telegram.ChatBot
 {
     public class UnknownCommandChatState : BaseChatState
     {

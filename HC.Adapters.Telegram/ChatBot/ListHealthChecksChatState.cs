@@ -8,7 +8,7 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace HC.Adapters.Telegram
+namespace HC.Adapters.Telegram.ChatBot
 {
     public class ListHealthChecksChatState : BaseChatState
     {

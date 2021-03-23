@@ -5,6 +5,14 @@
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 	</PropertyGroup>
 	<ItemGroup>
+	  <Content Remove="StatusHistory.json" />
+	</ItemGroup>
+	<ItemGroup>
+	  <None Remove="app-log.db" />
+	  <None Remove="app.db" />
+	  <None Remove="app.log" />
+	</ItemGroup>
+	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0-preview.2.21154.6" />
 		<PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0-preview.2.21154.6" />
 		<PackageReference Include="Serilog.Exceptions" Version="6.1.0" />
@@ -16,10 +24,6 @@
 	  <ProjectReference Include="..\HC.Adapters.Telegram\HC.Adapters.Telegram.csproj" />
 	  <ProjectReference Include="..\HC.ApplicationServices\HC.ApplicationServices.csproj" />
 	  <ProjectReference Include="..\HC.DAL.LiteDB\HC.DAL.LiteDB.csproj" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Content Update="StatusHistory.json">
-	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-	  </Content>
+	  <ProjectReference Include="..\HC.DAL.MongoDb\HC.DAL.MongoDb.csproj" />
 	</ItemGroup>
 </Project>

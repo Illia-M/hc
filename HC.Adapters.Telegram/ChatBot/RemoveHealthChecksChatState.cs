@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace HC.Adapters.Telegram
+namespace HC.Adapters.Telegram.ChatBot
 {
     public class RemoveHealthChecksChatState : BaseChatState
     {

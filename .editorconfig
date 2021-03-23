@@ -110,7 +110,7 @@ dotnet_style_require_accessibility_modifiers = for_non_interface_members:error
 #Style - Modifier preferences
 
 #when this rule is set to a list of modifiers, prefer the specified ordering.
-csharp_preferred_modifier_order = public,private,protected,static,readonly,override,async:error
+csharp_preferred_modifier_order = public,private,protected,static,abstract,sealed,virtual,readonly,override,async:error
 
 #Style - Pattern matching
 

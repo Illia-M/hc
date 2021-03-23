@@ -6,25 +6,23 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace HC.Adapters.Telegram
+namespace HC.Adapters.Telegram.ChatBot
 {
     public abstract class BaseChatState : IChatState
     {
         protected readonly TelegramBotClient TelegramBotClient;
         protected readonly IServiceProvider ServiceProvider;
 
-        public BaseChatState(TelegramBotClient telegramBotClient, IServiceProvider serviceProvider, Chat chat)
+        protected BaseChatState(TelegramBotClient telegramBotClient, IServiceProvider serviceProvider, Chat chat)
         {
             TelegramBotClient = telegramBotClient ?? throw new ArgumentNullException(nameof(telegramBotClient));
             ServiceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
             Chat = chat ?? throw new ArgumentNullException(nameof(chat));
         }
 
-        public Chat Chat {
-            get;
-        }
+        protected Chat Chat { get; }
 
-        virtual public Task<IChatState> Handle(Message message)
+        public virtual Task<IChatState> Handle(Message message)
         {
             return Task.FromResult<IChatState>(this);
         }

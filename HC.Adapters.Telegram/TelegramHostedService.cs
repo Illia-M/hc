@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using HC.Adapters.Telegram.ChatBot;
 using HC.ApplicationServices.Checks.HttpCheck;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -12,6 +13,7 @@ using Telegram.Bot.Args;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Chat = HC.Adapters.Telegram.ChatBot.Chat;
 
 namespace HC.Adapters.Telegram
 {
