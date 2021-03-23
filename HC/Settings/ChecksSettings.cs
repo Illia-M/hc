@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HC.Domain
+namespace HC.Settings
 {
     public class ChecksSettings
     {

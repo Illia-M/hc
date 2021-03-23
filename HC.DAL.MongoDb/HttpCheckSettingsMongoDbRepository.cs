@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using HC.Domain;
+using HC.Domain.HttpCheck;
+using HC.Domain.Repositories;
 using MongoDB.Driver;
 
 namespace HC.DAL.MongoDb
@@ -32,10 +33,10 @@ namespace HC.DAL.MongoDb
 
         public async Task<bool> Add(HttpCheck newHttpCheckSettings, CancellationToken cancellationToken)
         {
-            await _collection.UpdateOneAsync(
+            await _collection.ReplaceOneAsync(
                 check => check.Id == newHttpCheckSettings.Id,
-                new ObjectUpdateDefinition<HttpCheck>(newHttpCheckSettings),
-                new UpdateOptions { IsUpsert = true },
+                newHttpCheckSettings,
+                new ReplaceOptions { IsUpsert = true },
                 cancellationToken);
 
             return true;

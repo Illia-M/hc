@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace HC.Domain
+namespace HC.Domain.HttpCheck
 {
     public class HttpCheck
     {
-        private HttpCheck()
+        public HttpCheck()
         {
         }
 
@@ -20,19 +20,19 @@ namespace HC.Domain
             TelegramChatId = telegramChatId;
         }
 
-        public Guid Id { get;set; }
+        public Guid Id { get; private set; }
         public string Uri {
-            get; set;
+            get; private set;
         }
 
-        public TimeSpan Timeout { get; set; } 
+        public TimeSpan Timeout { get; private set; } 
 
-        public IReadOnlyCollection<ushort> SuccessStatusCodes { get; set; }
+        public IReadOnlyCollection<ushort> SuccessStatusCodes { get; private set; }
 
         public string? TelegramChatId {
-            get; set;
+            get; private set;
         }
 
-        public Dictionary<string, string> Headers { get; set; } 
+        public Dictionary<string, string> Headers { get; private set; } 
     }
 }

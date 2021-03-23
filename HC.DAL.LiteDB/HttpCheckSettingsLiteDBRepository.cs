@@ -4,7 +4,8 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using HC.Domain;
+using HC.Domain.HttpCheck;
+using HC.Domain.Repositories;
 using LiteDB;
 using Microsoft.Extensions.Options;
 

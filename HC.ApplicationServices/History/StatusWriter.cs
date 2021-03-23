@@ -5,10 +5,12 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using HC.Domain;
+using HC.Domain.Repositories;
 
 namespace HC.ApplicationServices.History
 {
-    public class StatusWriter : IDisposable
+    public class StatusWriter : IDisposable, ICheckHistoryRepository
     {
         private readonly object _lock = new object();
         private readonly JsonSerializerOptions _jsonSerializerOptions;

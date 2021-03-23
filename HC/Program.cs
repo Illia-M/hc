@@ -5,7 +5,7 @@ using HC.ApplicationServices.Checks.HttpCheck;
 using HC.ApplicationServices.History;
 using HC.ApplicationServices.Notifications;
 using HC.DAL.MongoDb;
-using HC.Domain;
+using HC.Domain.Repositories;
 using HC.Http;
 using HC.Settings;
 using LiteDB;
@@ -54,18 +54,19 @@ namespace HC
                     services.Configure<TelegramSettings>(hostContext.Configuration.GetSection(nameof(AppSettings.Telegram)));
                     services.Configure<ChecksSettings>(hostContext.Configuration.GetSection(nameof(AppSettings.Checks)));
                     services.AddSingleton<INotificationService, TelegramNotificationService>();
-                    services.AddSingleton<StatusWriter>();
                     services.AddTransient<HttpCheckExecutor>();
 
                     if (hostContext.Configuration.CanConfigureMongoDbStorage())
                     {
                         services.AddMongoDbDal(hostContext.Configuration);
                         services.AddTransient<IHttpCheckSettingsRepository, HttpCheckSettingsMongoDbRepository>();
+                        services.AddTransient<ICheckHistoryRepository, CheckHistoryMongoDbRepository>();
                     }
                     else
                     {
                         services.AddSingleton(provider => new LiteDatabase("app.db"));
                         services.AddTransient<IHttpCheckSettingsRepository, HttpCheckSettingsLiteDBRepository>();
+                        services.AddSingleton<ICheckHistoryRepository, StatusWriter>();
                     }
 
                     services.AddSingleton<TelegramBotClient>(provider => {

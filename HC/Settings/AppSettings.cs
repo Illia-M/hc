@@ -1,5 +1,4 @@
 ﻿using HC.Adapters.Telegram;
-using HC.Domain;
 
 namespace HC.Settings
 {

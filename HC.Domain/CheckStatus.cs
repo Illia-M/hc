@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 
-namespace HC.ApplicationServices.History
+namespace HC.Domain
 {
     public class CheckStatus
     {
