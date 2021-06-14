@@ -24,10 +24,10 @@ jobs:
         uses: security-code-scan/security-code-scan-add-action@main
         
       - name: Restore dependencies	
-        run: dotnet restore
+        run: dotnet restore HC.sln
 
       - name: Build
-        run: dotnet build --no-restore
+        run: dotnet build HC.sln --no-restore
 
       - name: Convert sarif for uploading to GitHub
         uses: security-code-scan/security-code-scan-results-action@main
