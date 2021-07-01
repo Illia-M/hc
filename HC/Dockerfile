@@ -6,11 +6,11 @@ WORKDIR /app
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["HC/HC.csproj", "HC/"]
+COPY ["HC.DAL.MongoDb/HC.DAL.MongoDb.csproj", "HC.DAL.MongoDb/"]
+COPY ["HC.Domain/HC.Domain.csproj", "HC.Domain/"]
 COPY ["HC.Adapters.Telegram/HC.Adapters.Telegram.csproj", "HC.Adapters.Telegram/"]
 COPY ["HC.ApplicationServices/HC.ApplicationServices.csproj", "HC.ApplicationServices/"]
-COPY ["HC.Domain/HC.Domain.csproj", "HC.Domain/"]
 COPY ["HC.DAL.LiteDB/HC.DAL.LiteDB.csproj", "HC.DAL.LiteDB/"]
-COPY ["HC.DAL.MongoDb/HC.DAL.MongoDb.csproj", "HC.DAL.MongoDb/"]
 RUN dotnet restore "HC/HC.csproj"
 COPY . .
 WORKDIR "/src/HC"
