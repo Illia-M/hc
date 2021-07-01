@@ -33,6 +33,7 @@ jobs:
         # queries: ./path/to/local/query, your-org/your-repo/queries@main
 
     - run: |
+       sudo snap install dotnet-sdk --channel=6.0/beta --classic
        dotnet build HC.sln
 
     - name: Perform CodeQL Analysis
